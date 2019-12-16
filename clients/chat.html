@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Online chatroom</title>
+    </head>
+    <body>
+        <div id="sseOutput"></div>
+        <script>
+            var sseOutput = document.getElementById('sseOutput');
+            var appendToSseOutput = function(data) {
+                sseOutput.appendChild(document.createTextNode(data));
+                sseOutput.appendChild(document.createElement('br'));
+            };
+
+            var source = new EventSource("http://10.7.1.126:5002/sse-chatroom");
+            source.onopen = function() { appendToSseOutput('-- CONNECTION ESTABLISHED --'); }; 
+            source.onerror = function () { appendToSseOutput('-- CONNECTION FAILED --'); };
+
+            source.onmessage = function (event) {
+
+                appendToSseOutput(event.data);
+
+                if (event.id == "CLOSE") {
+                    source.close(); 
+                }
+            }
+        </script>
+    </body>
+</html>
