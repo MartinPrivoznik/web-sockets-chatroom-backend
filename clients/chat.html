@@ -13,7 +13,7 @@
                 sseOutput.appendChild(document.createElement('br'));
             };
 
-            var source = new EventSource("http://10.7.1.126:5002/sse-chatroom");
+            var source = new EventSource("http://10.7.2.4:5002/sse-chatroom");
             source.onopen = function() { appendToSseOutput('-- CONNECTION ESTABLISHED --'); }; 
             source.onerror = function () { appendToSseOutput('-- CONNECTION FAILED --'); };
 
@@ -25,6 +25,27 @@
                     source.close(); 
                 }
             }
+
+            async function sendMessage() {
+                const url = "http://10.7.2.4:5002/api/chatroom/";
+                const response = await fetch(url, {
+                    method : "POST",
+                    mode: 'cors',
+                    cache: 'no-cache',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type' : 'application/json'
+                    },
+                    body : JSON.stringify({
+                        Message : document.getElementById('textinput').value
+                    })
+                });
+                document.getElementById('textinput').value = "";
+            }
+
         </script>
+    <br>
+    <input type="text" id="textinput"> <button onclick="sendMessage()"> Send message </button>
+    <br>
     </body>
 </html>
